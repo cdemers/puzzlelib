@@ -6,6 +6,9 @@ func Same(ai, bi []byte) bool {
 	lai := len(ai)
 	lbi := len(bi)
 
+	if lai != lbi {
+		return false
+	}
 	if lai == 0 && lbi == 0 {
 		return true
 	}
@@ -61,6 +64,10 @@ func Intersect(groupA, groupB []byte) (output []byte) {
 	}
 	return output
 
+}
+
+func IntersectS(groupA, groupB string) (output string) {
+	return string(Intersect([]byte(groupA), []byte(groupB)))
 }
 
 func Split(input []byte, delim byte) (output [][]byte) {
