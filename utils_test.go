@@ -86,6 +86,25 @@ func TestIntersect(t *testing.T) {
 	}
 }
 
+func TestIntersectS(t *testing.T) {
+	var intersect string
+
+	intersect = IntersectS("abc", "bcd")
+	if !Same([]byte(intersect), []byte{'b', 'c'}) {
+		t.Errorf("error: IntersectS(\"abc\",\"bcd\") should return \"bc\"")
+	}
+
+	intersect = IntersectS("ab12", "bc23")
+	if !Same([]byte(intersect), []byte{'b', '2'}) {
+		t.Errorf("error: IntersectS(\"ab12\",\"bc23\") should return \"b2\"")
+	}
+
+	intersect = IntersectS("ab", "cd")
+	if !Same([]byte(intersect), []byte{}) {
+		t.Errorf("error: Intersect([]byte{'a', 'b'}, []byte{'c', 'd'}) should return []byte{}")
+	}
+}
+
 func TestSplitInTwo(t *testing.T) {
 	input := []byte("abc\ndef\nghi")
 
@@ -94,6 +113,15 @@ func TestSplitInTwo(t *testing.T) {
 
 	if !Same(partA, []byte("abc")) || !Same(partB, []byte("def\nghi")) {
 		t.Errorf("error: SplitInTwo([]byte(\"abc\\ndef\\nghi\"), '\\n') should return []byte(\"abc\"), []byte(\"def\nghi\"), got %s, %s", string(partA), string(partB))
+	}
+}
+
+func TestFilterEmptyS(t *testing.T) {
+	input := []string{"", "a", "", "b", ""}
+
+	output := FilterEmptyS(input)
+	if output[0] != "a" || output[1] != "b" || len(output) != 2 {
+		t.Errorf("error: FilterEmptyS([]string{\"\", \"a\", \"\", \"b\", \"\"}) should return []string{\"a\",\"b\"}, got %#v", output)
 	}
 }
 

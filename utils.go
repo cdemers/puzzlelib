@@ -70,6 +70,15 @@ func IntersectS(groupA, groupB string) (output string) {
 	return string(Intersect([]byte(groupA), []byte(groupB)))
 }
 
+func FilterEmptyS(input []string) (output []string) {
+	for _, v := range input {
+		if v != "" {
+			output = append(output, v)
+		}
+	}
+	return output
+}
+
 func Split(input []byte, delim byte) (output [][]byte) {
 	var p, k int
 	for k = range input {
