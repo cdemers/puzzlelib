@@ -85,3 +85,26 @@ func TestIntersect(t *testing.T) {
 		t.Errorf("error: Intersect([]byte{'a', 'b'}, []byte{'c', 'd'}) should return []byte{}")
 	}
 }
+
+func TestSplitInTwo(t *testing.T) {
+	input := []byte("abc\ndef\nghi")
+
+	var partA, partB []byte
+	partA, partB = SplitInTwo(input, '\n')
+
+	if !Same(partA, []byte("abc")) || !Same(partB, []byte("def\nghi")) {
+		t.Errorf("error: SplitInTwo([]byte(\"abc\\ndef\\nghi\"), '\\n') should return []byte(\"abc\"), []byte(\"def\nghi\"), got %s, %s", string(partA), string(partB))
+	}
+}
+
+func TestTrim(t *testing.T) {
+	output := Trim([]byte(" \n abc \n "))
+	if !Same(output, []byte("abc")) {
+		t.Errorf("error: Trim([]byte(\" \\n abc \\n \")) should return []byte(\"abc\"), got %s", string(output))
+	}
+
+	output = Trim([]byte("abc"))
+	if !Same(output, []byte("abc")) {
+		t.Errorf("error: Trim([]byte(\"abc\")) should return []byte(\"abc\"), got %s", string(output))
+	}
+}

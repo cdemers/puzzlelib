@@ -76,3 +76,32 @@ func Split(input []byte, delim byte) (output [][]byte) {
 	}
 	return output
 }
+
+func SplitInTwo(input []byte, delim byte) (outputOne, outputTwo []byte) {
+	for k := range input {
+		if input[k] == delim {
+			outputOne = input[:k]
+			outputTwo = input[k+1:]
+			break
+		}
+	}
+	return outputOne, outputTwo
+}
+
+func Trim(input []byte) []byte {
+	var s, e int
+	var c byte
+	for s = 0; s < len(input); s++ {
+		c = input[s]
+		if c != ' ' && c != '\n' {
+			break
+		}
+	}
+	for e = len(input) - 1; e >= 0; e-- {
+		c = input[e]
+		if c != ' ' && c != '\n' {
+			break
+		}
+	}
+	return input[s : e+1]
+}
