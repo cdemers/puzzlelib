@@ -136,3 +136,93 @@ func TestTrim(t *testing.T) {
 		t.Errorf("error: Trim([]byte(\"abc\")) should return []byte(\"abc\"), got %s", string(output))
 	}
 }
+
+func TestByteStack_Push(t *testing.T) {
+	s := ByteStack{}
+	s.Push('a')
+	if len(s.stack) != 1 {
+		t.Errorf("expected stack length to be `1`, got %v", len(s.stack))
+	}
+	s.Push('b')
+	if len(s.stack) != 2 {
+		t.Errorf("expected stack length to be `2`, got %v", len(s.stack))
+	}
+	s.Push('c')
+
+	if !Same(s.stack, []byte("abc")) {
+		t.Errorf("expected stack content to be `abc`, got %v", s.stack)
+	}
+}
+
+func TestByteStack_Peek(t *testing.T) {
+	s := ByteStack{}
+	s.Push('a')
+	p, err := s.Peek()
+	if err != nil {
+		t.Errorf("expected no error, got: %s", err)
+	}
+	if p != 'a' {
+		t.Errorf("expected stack peek to return `a`, got %v", p)
+	}
+	if len(s.stack) != 1 {
+		t.Errorf("expected stack length to be `1`, got %v", len(s.stack))
+	}
+	s.Push('b')
+	p, err = s.Peek()
+	if err != nil {
+		t.Errorf("expected no error, got: %s", err)
+	}
+	if p != 'b' {
+		t.Errorf("expected stack peek to return `b`, got %v", p)
+	}
+	if len(s.stack) != 2 {
+		t.Errorf("expected stack length to be `2`, got %v", len(s.stack))
+	}
+}
+
+func TestByteStack_Pop(t *testing.T) {
+	s := ByteStack{}
+	s.Push('a')
+	if len(s.stack) != 1 {
+		t.Errorf("expected stack length to be `1`, got %v", len(s.stack))
+	}
+	p, err := s.Pop()
+	if err != nil {
+		t.Errorf("expected no error, got: %s", err)
+	}
+	if len(s.stack) != 0 {
+		t.Errorf("expected stack length to be `0`, got %v", len(s.stack))
+	}
+	if p != 'a' {
+		t.Errorf("expected Pop() to return `a`, got %v", p)
+	}
+	s.Push('a')
+	s.Push('b')
+	if len(s.stack) != 2 {
+		t.Errorf("expected stack length to be `2`, got %v", len(s.stack))
+	}
+	p, err = s.Pop()
+	if err != nil {
+		t.Errorf("expected no error, got: %s", err)
+	}
+	if len(s.stack) != 1 {
+		t.Errorf("expected stack length to be `1`, got %v", len(s.stack))
+	}
+	if p != 'b' {
+		t.Errorf("expected Pop() to return `b`, got %v", p)
+	}
+	p, err = s.Pop()
+	if err != nil {
+		t.Errorf("expected no error, got: %s", err)
+	}
+	if len(s.stack) != 0 {
+		t.Errorf("expected stack length to be `0`, got %v", len(s.stack))
+	}
+	p, err = s.Pop()
+	if err == nil {
+		t.Errorf("expected error while atempting Pop() on an empty stack, got no error")
+	}
+	if len(s.stack) != 0 {
+		t.Errorf("expected stack length to be `0`, got %v", len(s.stack))
+	}
+}

@@ -1,5 +1,7 @@
 package puzzlelib
 
+import "fmt"
+
 func Same(ai, bi []byte) bool {
 	a := map[byte]int{}
 
@@ -120,4 +122,28 @@ func Trim(input []byte) []byte {
 		}
 	}
 	return input[s : e+1]
+}
+
+type ByteStack struct {
+	stack []byte
+}
+
+func (s *ByteStack) Push(b byte) {
+	s.stack = append(s.stack, b)
+}
+
+func (s *ByteStack) Peek() (byte, error) {
+	if len(s.stack) == 0 {
+		return 0, fmt.Errorf("error, can't do Peek(), the stack is empty")
+	}
+	return s.stack[len(s.stack)-1:][0], nil
+}
+
+func (s *ByteStack) Pop() (b byte, err error) {
+	if len(s.stack) == 0 {
+		return 0, fmt.Errorf("error, can't do Pop(), the stack is empty")
+	}
+	b, _ = s.Peek()
+	s.stack = s.stack[:len(s.stack)-1]
+	return b, nil
 }
