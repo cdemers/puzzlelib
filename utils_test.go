@@ -180,6 +180,16 @@ func TestByteStack_Peek(t *testing.T) {
 	}
 }
 
+func TestByteStack_Stack(t *testing.T) {
+	s := ByteStack{}
+	s.Push('a')
+	s.Push('b')
+
+	if !Same(s.Stack(), []byte("ab")) {
+		t.Errorf("expected the stack to be `ab`, got %v", s.Stack())
+	}
+}
+
 func TestByteStack_Pop(t *testing.T) {
 	s := ByteStack{}
 	s.Push('a')

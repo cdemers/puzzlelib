@@ -147,3 +147,7 @@ func (s *ByteStack) Pop() (b byte, err error) {
 	s.stack = s.stack[:len(s.stack)-1]
 	return b, nil
 }
+
+func (s *ByteStack) Stack() []byte {
+	return s.stack
+}
