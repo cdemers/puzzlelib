@@ -151,3 +151,7 @@ func (s *ByteStack) Pop() (b byte, err error) {
 func (s *ByteStack) Stack() []byte {
 	return s.stack
 }
+
+func (s *ByteStack) Clear() {
+	s.stack = []byte{}
+}
