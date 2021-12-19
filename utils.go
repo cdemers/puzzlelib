@@ -155,3 +155,12 @@ func (s *ByteStack) Stack() []byte {
 func (s *ByteStack) Clear() {
 	s.stack = []byte{}
 }
+
+func StringInArray(needle string, haystack []string) bool {
+	for i := range haystack {
+		if needle == haystack[i] {
+			return true
+		}
+	}
+	return false
+}
