@@ -1,6 +1,8 @@
 package puzzlelib
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Same(ai, bi []byte) bool {
 	a := map[byte]int{}
@@ -163,4 +165,15 @@ func StringInArray(needle string, haystack []string) bool {
 		}
 	}
 	return false
+}
+
+func StringAppend(s []string, a [][]string) (o [][]string) {
+	o = make([][]string, len(a)+1)
+	for k := range a {
+		c := a[k]
+		o[k] = c
+	}
+	c := s
+	o[len(a)] = c
+	return o
 }
