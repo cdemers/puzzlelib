@@ -18,10 +18,9 @@ type node struct {
 	next  *node
 }
 
+// NewKeyedQueue creates a new KeyedQueue with the specified maximum size.
+// If maxSize is 0, the queue can grow without bound.
 func NewKeyedQueue(maxSize int) *KeyedQueue {
-	if maxSize <= 0 {
-		maxSize = 1
-	}
 	return &KeyedQueue{
 		size:    0,
 		maxSize: maxSize,
@@ -40,11 +39,14 @@ func (h *KeyedQueue) exists(key string) bool {
 	return false
 }
 
+// Push adds an element to the queue. If the queue is full, the function
+// returns false (the call is non-blocking, and oldest element is not
+// removed as it would be in a circular queue implementation).
 func (h *KeyedQueue) Push(key string, value []byte) bool {
 	h.lock.Lock()
 	defer h.lock.Unlock()
 
-	if h.size >= h.maxSize {
+	if h.size >= h.maxSize && h.maxSize != 0 {
 		return false
 	}
 
@@ -53,6 +55,7 @@ func (h *KeyedQueue) Push(key string, value []byte) bool {
 	}
 
 	node := &node{key: key, value: value}
+
 	if h.head == nil {
 		h.head = node
 		h.tail = node
@@ -65,6 +68,8 @@ func (h *KeyedQueue) Push(key string, value []byte) bool {
 	return true
 }
 
+// Pop removes the oldest element from the queue. If the queue is empty,
+// the function returns an empty key string and a nil value.
 func (h *KeyedQueue) Pop() (key string, value []byte) {
 	h.lock.Lock()
 	defer h.lock.Unlock()
@@ -80,6 +85,9 @@ func (h *KeyedQueue) Pop() (key string, value []byte) {
 	return node.key, node.value
 }
 
+// Peek returns the value of the element with the given key without removing
+// it from the queue. If the queue is empty, the function returns an empty
+// key string and a nil value.
 func (h *KeyedQueue) Peek(searchKey string) (key string, value []byte) {
 	h.lock.RLock()
 	defer h.lock.RUnlock()
@@ -93,8 +101,8 @@ func (h *KeyedQueue) Peek(searchKey string) (key string, value []byte) {
 	return "", nil
 }
 
+// Size returns the number of elements in the queue. It is not thread safe but
+// thread safety is usually not required for this function.
 func (h *KeyedQueue) Size() int {
-	h.lock.RLock()
-	defer h.lock.RUnlock()
 	return h.size
 }

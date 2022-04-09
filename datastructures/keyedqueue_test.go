@@ -104,3 +104,47 @@ func TestKeyedQueue_Peek(t *testing.T) {
 		t.Errorf("KeyedQueue_Size() returned %d, expected 3", kb.Size())
 	}
 }
+
+////////////////////////////////////////////////////////////////
+
+var OneKB = make([]byte, 1024)
+var KeysLookupTable []string
+
+func init() {
+	for i := 0; i < 1024; i++ {
+		OneKB[i] = byte(i)
+	}
+	for i := 0; i < 1024; i++ {
+		KeysLookupTable = append(KeysLookupTable, string(OneKB[i]))
+	}
+}
+
+func BenchmarkNewKeyedQueue(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = NewKeyedQueue(0)
+	}
+}
+
+func BenchmarkKeyedQueue_Push1KB(b *testing.B) {
+	// This benchmark pushes 1024 different keys to the queue in a loop,
+	// each with a value of 1KB of data.
+	kq := NewKeyedQueue(0)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		kq.Push(KeysLookupTable[i%1024], OneKB)
+	}
+}
+
+func BenchmarkKeyedQueue_Pop1KB(b *testing.B) {
+	// This benchmark is not accurate, because I see no way to
+	// generate an unknown number b.N of unique keys without
+	// impacting the benchmark itself.
+	kq := NewKeyedQueue(0)
+	for i := 0; i < b.N; i++ {
+		kq.Push(KeysLookupTable[i%1024], OneKB)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		kq.Pop()
+	}
+}
